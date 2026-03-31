@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gunpla_Checklist", "Gunpla_Checklist.csproj", "{96B0900B-F6E7-4DD6-939D-E8E53284FDB4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{96B0900B-F6E7-4DD6-939D-E8E53284FDB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96B0900B-F6E7-4DD6-939D-E8E53284FDB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96B0900B-F6E7-4DD6-939D-E8E53284FDB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96B0900B-F6E7-4DD6-939D-E8E53284FDB4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DE670E1E-EC45-4D17-B5BE-69614CDDFD29}
+	EndGlobalSection
+EndGlobal
