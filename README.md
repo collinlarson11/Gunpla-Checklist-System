@@ -25,7 +25,7 @@ classDiagram
         +List~GunplaKit~ MyKits
         +AddKit(GunplaKit kit) void
         +DisplayChecklist() void
-        +GetCompletionStats() string
+        +GetCollectionStats() string
     }
 
     class Program {
