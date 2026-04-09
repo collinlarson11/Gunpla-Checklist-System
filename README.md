@@ -21,6 +21,12 @@ classDiagram
         +GetDetails() string
     }
 
+    class MasterGradeKit {
+        +int LineNumber
+        +string Scale
+        +GetDetails() string
+    }
+
     class CollectionManager {
         +List~GunplaKit~ MyKits
         +AddKit(GunplaKit kit) void
