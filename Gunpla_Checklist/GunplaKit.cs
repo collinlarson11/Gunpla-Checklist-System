@@ -1,21 +1,33 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Gunpla_Checklist
 {
+    /// <summary>
+    /// Base class for a kit. Designed to be JSON-serializable.
+    /// Subclasses (RealGradeKit, MasterGradeKit) can extend this type.
+    /// </summary>
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+    [JsonDerivedType(typeof(RealGradeKit), "RG")]
+    [JsonDerivedType(typeof(MasterGradeKit), "MG")]
     internal class GunplaKit
     {
-        // Make properties serializable (public getters + setters)
-        public string ModelName { get; set; } = string.Empty; // private model name
-        public bool IsBuilt { get; set; } // public readable build status
+        /// <summary>Model name shown to the user.</summary>
+        public string ModelName { get; set; } = string.Empty;
 
-        // public properties for series and scale to allow filtering
+        /// <summary>Whether this kit is marked as built.</summary>
+        public bool IsBuilt { get; set; }
+
+        /// <summary>Series name (used for grouping/stats).</summary>
         public string Series { get; set; } = string.Empty;
+
+        /// <summary>Scale string (e.g. "1/144", "1/100").</summary>
         public string Scale { get; set; } = string.Empty;
 
-        // Parameterless constructor required by many serializers
+        /// <summary>Parameterless ctor required by JSON serializer.</summary>
         public GunplaKit() { }
 
-        // Primary constructor used by the app
+        /// <summary>Convenience ctor used by the UI to create a kit instance.</summary>
         public GunplaKit(string modelName, string series, string scale)
         {
             ModelName = modelName ?? string.Empty;
@@ -24,11 +36,11 @@ namespace Gunpla_Checklist
             IsBuilt = false;
         }
 
-        // mark kit as built
+        /// <summary>Mark this kit as built.</summary>
         public void MarkAsBuilt() => IsBuilt = true;
 
-        // return the details of the kit
-        public string GetDetails() =>
-            $"Model: {ModelName}, Series: {Series}, Scale: {Scale}, Built: {IsBuilt}";
+        /// <summary>Return a human-readable details string for console display.</summary>
+        public virtual string GetDetails()
+            => $"Model: {ModelName}, Series: {Series}, Scale: {Scale}, Built: {IsBuilt}";
     }
 }
