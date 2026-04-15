@@ -104,7 +104,7 @@ namespace Gunpla_Checklist
                 int.TryParse(Console.ReadLine(), out int line);
                 manager.AddKit(new RealGradeKit(name, series, line));
             }
-            else if (type == "2") // Master Grade - Skip the Number
+            else if (type == "2") // Master Grade - No Line Number, fixed scale
             {
                 manager.AddKit(new MasterGradeKit(name, series));
             }

@@ -2,20 +2,22 @@
 
 namespace Gunpla_Checklist
 {
-    /// <summary>
-    /// Master Grade variant — similar to RealGradeKit but uses a different discriminator.
-    /// </summary>
+    // Inherit from GunplaKit
     internal class MasterGradeKit : GunplaKit
     {
-        public MasterGradeKit() { }
+        // Removed LineNumber property entirely 
 
-        public MasterGradeKit(string modelName, string series, int lineNumber)
+        public MasterGradeKit() : base() { }
+
+        // The constructor now ONLY takes name and series. 
+        // We pass "1/100" to the base class automatically.
+        public MasterGradeKit(string modelName, string series)
             : base(modelName, series, "1/100")
         {
         }
 
-        public override string GetDetails()
-            => $"{base.GetDetails()} [Master Grade]";
+        public override string GetDetails() =>
+            $"{base.GetDetails()} [Master Grade]";
     }
 }
 

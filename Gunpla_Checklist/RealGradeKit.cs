@@ -12,17 +12,17 @@ namespace Gunpla_Checklist
         public int LineNumber { get; set; }
 
         /// <summary>Parameterless ctor required by serializer.</summary>
-        public RealGradeKit() { }
+        public RealGradeKit() : base() { }
 
         /// <summary>Construct a Real Grade kit with line number.</summary>
         public RealGradeKit(string modelName, string series, int lineNumber)
-            : base(modelName, series, "RG") // use "RG" or leave Scale empty if preferred
+            : base(modelName, series, "1/144")
         {
             LineNumber = lineNumber;
         }
 
         /// <summary>Return details including the line number.</summary>
-        public override string GetDetails()
-            => $"RG - Model: {ModelName}, Series: {Series}, Line#: {LineNumber}, Built: {IsBuilt}";
+        public override string GetDetails() =>
+            $"{base.GetDetails()}, RG Line #: {LineNumber}";
     }
 }
