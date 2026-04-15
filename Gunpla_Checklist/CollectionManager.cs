@@ -100,14 +100,14 @@ namespace Gunpla_Checklist
         /// <returns></returns>
         public bool TryDeleteKit(int oneBasedIndex)
         {
-            // Check if the index is valid
+            // Validate that the number entered exists in the list
             if (oneBasedIndex < 1 || oneBasedIndex > MyKits.Count)
                 return false;
 
-            // Convert one-based to zero-based index for the actual list
+            // Remove from the underlying list (adjusting for 0-based index)
             MyKits.RemoveAt(oneBasedIndex - 1);
 
-            // Save immediately so the kit stays deleted after restart
+            // Auto-save so the deletion is permanent
             Save();
             return true;
         }

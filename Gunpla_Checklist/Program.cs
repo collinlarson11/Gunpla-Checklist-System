@@ -90,32 +90,32 @@ namespace Gunpla_Checklist
         /// <param name="manager">The collection manager to receive the new kit.</param>
         private static void AddKitWorkflow(CollectionManager manager)
         {
-            Console.WriteLine("Type: 1) RG, 2) MG, 3) Other");
+            Console.WriteLine("\nSelect Grade: 1) Real Grade, 2) Master Grade, 3) Other");
             var type = Console.ReadLine();
 
             Console.Write("Model Name: ");
-            var name = Console.ReadLine();
+            var name = Console.ReadLine() ?? "Unknown";
             Console.Write("Series: ");
-            var series = Console.ReadLine();
+            var series = Console.ReadLine() ?? "Unknown";
 
-            if (type == "1" || type == "2")
+            if (type == "1") // Real Grade - Keep the Number
             {
-                // Line number is numeric; if parsing fails line will be 0
-                Console.Write("Line Number: ");
+                Console.Write("RG Line Number: ");
                 int.TryParse(Console.ReadLine(), out int line);
-
-                // Create specialized kits which inherit necessary data
-                if (type == "1") manager.AddKit(new RealGradeKit(name, series, line));
-                else manager.AddKit(new MasterGradeKit(name, series, line));
+                manager.AddKit(new RealGradeKit(name, series, line));
             }
-            else
+            else if (type == "2") // Master Grade - Skip the Number
             {
-                // Generic kit with arbitrary scale string
-                Console.Write("Scale: ");
-                var scale = Console.ReadLine();
+                manager.AddKit(new MasterGradeKit(name, series));
+            }
+            else // Standard/Other
+            {
+                Console.Write("Scale (e.g., 1/144): ");
+                var scale = Console.ReadLine() ?? "1/144";
                 manager.AddKit(new GunplaKit(name, series, scale));
             }
-            Console.WriteLine("Kit added!");
+
+            Console.WriteLine("Kit added successfully!");
             Pause();
         }
 
