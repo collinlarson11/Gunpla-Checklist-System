@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gunpla_Checklist
 {
     internal class GunplaKit
     {
-        // Private model name per UML
-        private string ModelName { get; }
+        // Make properties serializable (public getters + setters)
+        public string ModelName { get; set; } = string.Empty; // private model name
+        public bool IsBuilt { get; set; } // public readable build status
 
-        // Public readable built flag, writable only by the class
-        public bool IsBuilt { get; private set; }
+        // public properties for series and scale to allow filtering
+        public string Series { get; set; } = string.Empty;
+        public string Scale { get; set; } = string.Empty;
 
-        // Public properties per UML
-        public string Series { get; }
-        public string Scale { get; }
+        // Parameterless constructor required by many serializers
+        public GunplaKit() { }
 
-        // Constructor now includes scale
+        // Primary constructor used by the app
         public GunplaKit(string modelName, string series, string scale)
         {
             ModelName = modelName ?? string.Empty;
@@ -27,16 +24,11 @@ namespace Gunpla_Checklist
             IsBuilt = false;
         }
 
-        // Mark kit built
-        public void MarkAsBuilt()
-        {
-            IsBuilt = true;
-        }
+        // mark kit as built
+        public void MarkAsBuilt() => IsBuilt = true;
 
-        // Return details including scale
-        public string GetDetails()
-        {
-            return $"Model: {ModelName}, Series: {Series}, Scale: {Scale}, Built: {IsBuilt}";
-        }
+        // return the details of the kit
+        public string GetDetails() =>
+            $"Model: {ModelName}, Series: {Series}, Scale: {Scale}, Built: {IsBuilt}";
     }
 }

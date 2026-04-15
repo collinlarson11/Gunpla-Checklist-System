@@ -1,29 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Gunpla_Checklist
 {
     internal class CollectionManager
     {
-        // Private collection per UML
-        private readonly List<GunplaKit> MyKits;
+        private readonly List<GunplaKit> MyKits; // private field to hold the collection of kits
 
-        public CollectionManager()
+        // Data file in %AppData%\GunplaChecklist\kits.json
+        private static string DataFilePath =>
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                         "GunplaChecklist", "kits.json");
+
+        public CollectionManager() // public constructor to initialize the collection
         {
             MyKits = new List<GunplaKit>();
         }
 
-        // AddKit(GunplaKit kit) : void
-        public void AddKit(GunplaKit kit)
+        public void AddKit(GunplaKit kit) 
         {
             if (kit == null) throw new ArgumentNullException(nameof(kit));
             MyKits.Add(kit);
+            Save(); // auto-save after adding
         }
 
-        // DisplayChecklist() : void
         public void DisplayChecklist()
         {
             if (!MyKits.Any())
@@ -34,13 +37,9 @@ namespace Gunpla_Checklist
 
             Console.WriteLine("Gunpla Checklist:");
             for (int i = 0; i < MyKits.Count; i++)
-            {
                 Console.WriteLine($"{i + 1}. {MyKits[i].GetDetails()}");
-            }
         }
 
-        // Named to match Program.cs calls
-        // GetCollectionStats() : string
         public string GetCollectionStats()
         {
             int total = MyKits.Count;
@@ -50,7 +49,7 @@ namespace Gunpla_Checklist
             var seriesBreakdown = MyKits
                 .GroupBy(k => k.Series ?? string.Empty)
                 .OrderBy(g => g.Key)
-                .Select(g => $"{g.Key}: {g.Count()}")
+                .Select(g => $"{(string.IsNullOrEmpty(g.Key) ? "(Unknown)" : g.Key)}: {g.Count()}")
                 .ToArray();
 
             string seriesPart = seriesBreakdown.Length > 0
@@ -60,13 +59,52 @@ namespace Gunpla_Checklist
             return $"Total: {total}, Built: {built}, Unbuilt: {unbuilt}{seriesPart}";
         }
 
-        // TryMarkKitBuilt(int oneBasedIndex) : bool
-        // Returns true if the kit was found and marked built; false otherwise.
         public bool TryMarkKitBuilt(int oneBasedIndex)
         {
             if (oneBasedIndex < 1 || oneBasedIndex > MyKits.Count) return false;
             MyKits[oneBasedIndex - 1].MarkAsBuilt();
+            Save(); // persist the change
             return true;
+        }
+
+        // Persist collection to disk (JSON)
+        public void Save()
+        {
+            try
+            {
+                var path = DataFilePath;
+                var dir = Path.GetDirectoryName(path);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                var json = JsonSerializer.Serialize(MyKits, options);
+                File.WriteAllText(path, json);
+            }
+            catch (Exception ex)
+            {
+                // Non-fatal: write to stderr; adapt to UI/logging if needed
+                Console.Error.WriteLine($"Failed to save collection: {ex.Message}");
+            }
+        }
+
+        // Load collection from disk (JSON)
+        public void Load()
+        {
+            try
+            {
+                var path = DataFilePath;
+                if (!File.Exists(path)) return;
+
+                var json = File.ReadAllText(path);
+                var items = JsonSerializer.Deserialize<List<GunplaKit>>(json);
+                MyKits.Clear();
+                if (items != null) MyKits.AddRange(items);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Failed to load collection: {ex.Message}");
+            }
         }
     }
 }

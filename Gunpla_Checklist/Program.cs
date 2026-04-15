@@ -1,21 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gunpla_Checklist
 {
     internal class Program
     {
-        static void Main(string[] args)
-        {
-            ShowMenu();
-        }
+        static void Main(string[] args) => ShowMenu();
 
         public static void ShowMenu()
         {
             var manager = new CollectionManager();
+            manager.Load(); // load persisted data at startup
 
             while (true)
             {
@@ -80,6 +74,7 @@ namespace Gunpla_Checklist
                         break;
 
                     case "5":
+                        manager.Save(); // ensure persisted on exit
                         ExitProgram();
                         return;
 
@@ -98,7 +93,6 @@ namespace Gunpla_Checklist
             Console.ReadLine();
         }
 
-        // Explicit exit function (graceful)
         private static void ExitProgram()
         {
             Console.WriteLine();
