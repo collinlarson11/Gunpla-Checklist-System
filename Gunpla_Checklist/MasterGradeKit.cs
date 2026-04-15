@@ -7,19 +7,15 @@ namespace Gunpla_Checklist
     /// </summary>
     internal class MasterGradeKit : GunplaKit
     {
-        /// <summary>Optional numeric identifier for master-grade kits.</summary>
-        public int LineNumber { get; set; }
-
         public MasterGradeKit() { }
 
         public MasterGradeKit(string modelName, string series, int lineNumber)
-            : base(modelName, series, "MG")
+            : base(modelName, series, "1/100")
         {
-            LineNumber = lineNumber;
         }
 
         public override string GetDetails()
-            => $"MG - Model: {ModelName}, Series: {Series}, Line#: {LineNumber}, Built: {IsBuilt}";
+            => $"{base.GetDetails()} [Master Grade]";
     }
 }
 
