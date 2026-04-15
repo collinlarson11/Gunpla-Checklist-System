@@ -113,6 +113,30 @@ namespace Gunpla_Checklist
         }
 
         /// <summary>
+        /// Feature : Display only unbuilt kits with their indices. Returns the filtered list
+        /// </summary>
+        /// <returns></returns>
+        public List<GunplaKit> DisplayUnbuiltKits()
+        {
+            // Filter the list to get only unbuilt kits using LINQ
+            var unbuiltKits = MyKits.Where(k => !k.IsBuilt).ToList();
+
+            if (!unbuiltKits.Any())
+            {
+                Console.WriteLine("Everything in your collection is already built! Nice work.");
+                return unbuiltKits;
+            }
+
+            Console.WriteLine("Unbuilt Kits:");
+            for (int i = 0; i < unbuiltKits.Count; i++)
+            {
+                // Display with a number for the user to pick
+                Console.WriteLine($"{i + 1}. {unbuiltKits[i].GetDetails()}");
+            }
+
+            return unbuiltKits; // Return this filtered list so Program.cs knows what's what
+        }
+        /// <summary>
         /// Save the current collection to a JSON file. Non-fatal: on error the exception
         /// is written to stderr but not thrown, so the UI can continue.
         /// </summary>

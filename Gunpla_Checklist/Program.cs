@@ -49,11 +49,29 @@ namespace Gunpla_Checklist
                         Pause();
                         break;
                     case "4":
-                        // Mark an item by the 1-based index shown in DisplayChecklist
-                        manager.DisplayChecklist();
-                        Console.Write("Enter kit number: ");
-                        if (int.TryParse(Console.ReadLine(), out int idx))
-                            manager.TryMarkKitBuilt(idx); // method handles bounds + persistence
+                        Console.Clear();
+                        var unbuiltList = manager.DisplayUnbuiltKits();
+
+                        if (unbuiltList.Count > 0)
+                        {
+                            Console.Write("\nEnter the number of the kit to mark as built: ");
+
+                            // Changed 'choice' to 'selectionIdx' to avoid the name conflict
+                            if (int.TryParse(Console.ReadLine(), out int selectionIdx))
+                            {
+                                if (selectionIdx > 0 && selectionIdx <= unbuiltList.Count)
+                                {
+                                    var selectedKit = unbuiltList[selectionIdx - 1];
+                                    selectedKit.MarkAsBuilt();
+                                    manager.Save();
+                                    Console.WriteLine($"\n'{selectedKit.ModelName}' is now marked as built!");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid selection.");
+                                }
+                            }
+                        }
                         Pause();
                         break;
                     case "5":
