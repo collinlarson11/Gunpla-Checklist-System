@@ -6,27 +6,42 @@ using System.Text.Json;
 
 namespace Gunpla_Checklist
 {
+    /// <summary>
+    /// Manages an in-memory list of GunplaKit instances and performs
+    /// persistence (JSON save/load) for the collection.
+    /// </summary>
     internal class CollectionManager
     {
+        // Backing list that stores the kits. The UI displays 1-based indices
+        // corresponding to positions inside this list.
         private readonly List<GunplaKit> MyKits; // private field to hold the collection of kits
 
-        // Data file in %AppData%\GunplaChecklist\kits.json
+        // Path to the JSON data file used to persist the collection.
+        // Using %AppData% keeps per-user data in a conventional location.
         private static string DataFilePath =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                          "GunplaChecklist", "kits.json");
 
-        public CollectionManager() // public constructor to initialize the collection
+        public CollectionManager()
         {
             MyKits = new List<GunplaKit>();
         }
 
-        public void AddKit(GunplaKit kit) 
+        /// <summary>
+        /// Add a kit to the collection and auto-save the data to disk.
+        /// Throws ArgumentNullException if kit is null.
+        /// </summary>
+        public void AddKit(GunplaKit kit)
         {
             if (kit == null) throw new ArgumentNullException(nameof(kit));
             MyKits.Add(kit);
-            Save(); // auto-save after adding
+            Save(); // persist immediately so the data is not lost on crash
         }
 
+        /// <summary>
+        /// Write a human-readable checklist to the console.
+        /// Uses 1-based indices so the list is friendlier for users.
+        /// </summary>
         public void DisplayChecklist()
         {
             if (!MyKits.Any())
@@ -40,12 +55,16 @@ namespace Gunpla_Checklist
                 Console.WriteLine($"{i + 1}. {MyKits[i].GetDetails()}");
         }
 
+        /// <summary>
+        /// Returns a compact stats summary (total, built, unbuilt and series counts).
+        /// </summary>
         public string GetCollectionStats()
         {
             int total = MyKits.Count;
             int built = MyKits.Count(k => k.IsBuilt);
             int unbuilt = total - built;
 
+            // Group by series for a quick breakdown
             var seriesBreakdown = MyKits
                 .GroupBy(k => k.Series ?? string.Empty)
                 .OrderBy(g => g.Key)
@@ -59,15 +78,44 @@ namespace Gunpla_Checklist
             return $"Total: {total}, Built: {built}, Unbuilt: {unbuilt}{seriesPart}";
         }
 
+        /// <summary>
+        /// Marks the kit at the given 1-based index as built and persists the change.
+        /// Returns false if index is out of range.
+        /// </summary>
         public bool TryMarkKitBuilt(int oneBasedIndex)
         {
             if (oneBasedIndex < 1 || oneBasedIndex > MyKits.Count) return false;
+
+            // Convert to zero-based index and mark built
             MyKits[oneBasedIndex - 1].MarkAsBuilt();
-            Save(); // persist the change
+            Save(); // persist the updated state
             return true;
         }
 
-        // Persist collection to disk (JSON)
+        /// <summary>
+        /// Added a feature to delete a kit by its 1-based index. 
+        /// Returns false if the index is invalid.
+        /// </summary>
+        /// <param name="oneBasedIndex"></param>
+        /// <returns></returns>
+        public bool TryDeleteKit(int oneBasedIndex)
+        {
+            // Check if the index is valid
+            if (oneBasedIndex < 1 || oneBasedIndex > MyKits.Count)
+                return false;
+
+            // Convert one-based to zero-based index for the actual list
+            MyKits.RemoveAt(oneBasedIndex - 1);
+
+            // Save immediately so the kit stays deleted after restart
+            Save();
+            return true;
+        }
+
+        /// <summary>
+        /// Save the current collection to a JSON file. Non-fatal: on error the exception
+        /// is written to stderr but not thrown, so the UI can continue.
+        /// </summary>
         public void Save()
         {
             try
@@ -77,18 +125,22 @@ namespace Gunpla_Checklist
                 if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 
+                // Pretty-print JSON to make manual inspection easier
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 var json = JsonSerializer.Serialize(MyKits, options);
                 File.WriteAllText(path, json);
             }
             catch (Exception ex)
             {
-                // Non-fatal: write to stderr; adapt to UI/logging if needed
+                // Non-fatal: log to stderr. Consider adding a proper logger later.
                 Console.Error.WriteLine($"Failed to save collection: {ex.Message}");
             }
         }
 
-        // Load collection from disk (JSON)
+        /// <summary>
+        /// Load the collection from disk. If the file is missing this is a no-op.
+        /// On parse errors we write the error to stderr and keep the in-memory list empty.
+        /// </summary>
         public void Load()
         {
             try
@@ -103,6 +155,7 @@ namespace Gunpla_Checklist
             }
             catch (Exception ex)
             {
+                // Non-fatal: write to stderr; you can add migration or backup logic here.
                 Console.Error.WriteLine($"Failed to load collection: {ex.Message}");
             }
         }
