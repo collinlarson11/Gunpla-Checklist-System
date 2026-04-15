@@ -1,31 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gunpla_Checklist
 {
-    internal class MasterGradeKit
+    /// <summary>
+    /// Master Grade variant — similar to RealGradeKit but uses a different discriminator.
+    /// </summary>
+    internal class MasterGradeKit : GunplaKit
     {
-        // Private Field per UML diagram
-        private int LineNumber { get; }
+        /// <summary>Optional numeric identifier for master-grade kits.</summary>
+        public int LineNumber { get; set; }
 
-        // Public property per UML diagram
-        public string Scale { get; set; }
+        public MasterGradeKit() { }
 
-        // Constructor to initialize the LineNumber and Scale
-        public MasterGradeKit(int lineNumber, string scale)
+        public MasterGradeKit(string modelName, string series, int lineNumber)
+            : base(modelName, series, "MG")
         {
             LineNumber = lineNumber;
-            Scale = scale ?? string.Empty;
         }
 
-        // Public method per UML diagram to return kit details
-        public string GetDetails()
-        {
-            return $"Line Number: {LineNumber}, Scale: {Scale}";
-        }
+        public override string GetDetails()
+            => $"MG - Model: {ModelName}, Series: {Series}, Line#: {LineNumber}, Built: {IsBuilt}";
     }
 }
 
