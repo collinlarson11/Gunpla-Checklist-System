@@ -1,43 +1,49 @@
 # Gunpla-Checklist-System
 Management system for Gunpla Kits 
 classDiagram
-    %% Inheritance: RealGradeKit IS-A GunplaKit
-    GunplaKit <|-- RealGradeKit
-    
-    %% Composition: CollectionManager HAS-A List of GunplaKits
+    direction TB
+
+    %% Relationships
     CollectionManager "1" *-- "many" GunplaKit : manages
+    GunplaKit <|-- RealGradeKit : inheritance
+    GunplaKit <|-- MasterGradeKit : inheritance
+    Program ..> CollectionManager : uses
 
     class GunplaKit {
         +string ModelName
         +string Series
+        +string Scale
         +bool IsBuilt
         +MarkAsBuilt() void
-        +GetDetails() string
+        +GetDetails() string*
     }
 
     class RealGradeKit {
         +int LineNumber
-        +string Scale
         +GetDetails() string
     }
 
     class MasterGradeKit {
         +int LineNumber
-        +string Scale
         +GetDetails() string
     }
 
     class CollectionManager {
-    +List~GunplaKit~ MyKits
-    +AddKit(GunplaKit kit) void
-    +DisplayChecklist() void
-    +GetCollectionStats() string
-    +SaveToFile(string fileName) void
-    +LoadFromFile(string fileName) void
+        -List~GunplaKit~ MyKits
+        -string DataFilePath
+        +AddKit(GunplaKit kit) void
+        +TryMarkKitBuilt(int index) bool
+        +TryDeleteKit(int index) bool
+        +DisplayChecklist() void
+        +GetCollectionStats() string
+        +Save() void
+        +Load() void
     }
 
     class Program {
         <<Main>>
         +Main() void
         +ShowMenu() void
+        -AddKitWorkflow() void
+        -Pause() void
     }
