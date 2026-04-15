@@ -21,11 +21,19 @@ classDiagram
         +GetDetails() string
     }
 
+    class MasterGradeKit {
+        +int LineNumber
+        +string Scale
+        +GetDetails() string
+    }
+
     class CollectionManager {
-        +List~GunplaKit~ MyKits
-        +AddKit(GunplaKit kit) void
-        +DisplayChecklist() void
-        +GetCollectionStats() string
+    +List~GunplaKit~ MyKits
+    +AddKit(GunplaKit kit) void
+    +DisplayChecklist() void
+    +GetCollectionStats() string
+    +SaveToFile(string fileName) void
+    +LoadFromFile(string fileName) void
     }
 
     class Program {
