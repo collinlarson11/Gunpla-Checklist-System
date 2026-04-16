@@ -56,7 +56,7 @@ namespace Gunpla_Checklist
         }
 
         /// <summary>
-        /// Returns a compact stats summary (total, built, unbuilt and series counts).
+        /// Returns a compact stats summary (total, built, unbuilt and grade counts).
         /// </summary>
         public string GetCollectionStats()
         {
@@ -64,27 +64,20 @@ namespace Gunpla_Checklist
             int built = MyKits.Count(k => k.IsBuilt);
             int unbuilt = total - built;
 
-            // Group by series for a quick breakdown
-            /*var seriesBreakdown = MyKits
-                .GroupBy(k => k.Series ?? string.Empty)
-                .OrderBy(g => g.Key)
-                .Select(g => $"{(string.IsNullOrEmpty(g.Key) ? "(Unknown)" : g.Key)}: {g.Count()}")
-                .ToArray();
-
-            string seriesPart = seriesBreakdown.Length > 0
-                ? $", By Series: {string.Join(", ", seriesBreakdown)}"
-                : string.Empty;*/
-
+            // Group by Grade (use "Other" for empty/null), count items per grade,
+            // then format as "RG = 2", "MG = 1", "Other = 1".
             var gradeBreakdown = MyKits
-                .GroupBy(k => k.Grade ?? string.Empty)
-                .OrderBy(g => g.Key)
-                .Select(g => $"{(string.IsNullOrEmpty(g.Key) ? "(Unknown)" : g.Key)}: {g.Count()}")
+                .GroupBy(k => string.IsNullOrWhiteSpace(k.Grade) ? "Other" : k.Grade.Trim())
+                .OrderBy(g => g.Key) // change ordering if you prefer different sort
+                .Select(g => $"{g.Key} = {g.Count()}")
                 .ToArray();
 
-            return $"Total: {total}, Built: {built}, Unbuilt: {unbuilt}, By Grade: {string.Join(", ", gradeBreakdown)}";
-        }
+            string gradePart = gradeBreakdown.Length > 0
+                ? $", By Grade: {string.Join(", ", gradeBreakdown)}"
+                : string.Empty;
 
-        /*{seriesPart}*/ // Uncomment if you want series breakdown in stats
+            return $"Total: {total}, Built: {built}, Unbuilt: {unbuilt}{gradePart}";
+        }
 
         /// <summary>
         /// Marks the kit at the given 1-based index as built and persists the change.

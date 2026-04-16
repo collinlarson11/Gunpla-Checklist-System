@@ -24,8 +24,9 @@ namespace Gunpla_Checklist
         /// <summary>Scale string (e.g. "1/144", "1/100").</summary>
         public string Scale { get; set; } = string.Empty;
 
-        /// <summary>Grade string (e.g. "RG", "MG").</summary>
-        public string Grade { get; set; } = string.Empty;
+        /// <summary>Grade string (e.g. "RG", "MG", Grade will default to "Other" if the other options
+        /// are selected).</summary>
+        public string Grade { get; set; } = "Other";
 
         /// <summary>Parameterless ctor required by JSON serializer.</summary>
         public GunplaKit() { }
@@ -36,12 +37,7 @@ namespace Gunpla_Checklist
             ModelName = modelName ?? string.Empty;
             Series = series ?? string.Empty;
             Scale = scale ?? string.Empty;
-            Grade = scale switch
-            {
-                "1/144" => "RG",
-                "1/100" => "MG",
-                _ => string.Empty
-            };
+            Grade = "Other";
             IsBuilt = false;
         }
 
@@ -52,7 +48,7 @@ namespace Gunpla_Checklist
         public virtual string GetDetails()
         {
             // Returns the standard part of the string
-            return $"Model: {ModelName}, Series: {Series}, Scale: {Scale}, Built: {IsBuilt}, Grade:{Grade}";
+            return $"Model: {ModelName}, Series: {Series}, Scale: {Scale}, Built: {IsBuilt}, Grade:[{Grade}]";
         }
     }
 }

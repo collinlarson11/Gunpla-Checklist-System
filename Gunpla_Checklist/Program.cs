@@ -118,13 +118,15 @@ namespace Gunpla_Checklist
 
             if (type == "1") // Real Grade - Keep the Number
             {
+                var scale = "1/144";
                 Console.Write("RG Line Number: ");
                 int.TryParse(Console.ReadLine(), out int line);
-                manager.AddKit(new RealGradeKit(name, series, line));
+                manager.AddKit(new RealGradeKit(name, series, line, scale));
             }
             else if (type == "2") // Master Grade - No Line Number, fixed scale
             {
-                manager.AddKit(new MasterGradeKit(name, series));
+                var scale = "1/100";
+                manager.AddKit(new MasterGradeKit(name, series, scale));
             }
             else // Standard/Other
             {

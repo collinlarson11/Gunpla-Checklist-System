@@ -2,25 +2,36 @@
 
 namespace Gunpla_Checklist
 {
-    // Inherit from GunplaKit
+    /// <summary>
+    /// Inherits from GunplaKit and represents a Master Grade kit. .
+    /// Master Grade kit (MG). Sets Grade = "MG" automatically.
+    /// </summary>
     internal class MasterGradeKit : GunplaKit
     {
-        // Removed LineNumber property entirely 
 
-        public MasterGradeKit() : base() { }
-
-        // The constructor now ONLY takes name and series. 
-        // We pass "1/100" to the base class automatically.
-        public MasterGradeKit(string modelName, string series)
-            : base(modelName, series, "1/100")
+        // Parameterless ctor for serializer
+        public MasterGradeKit()
         {
-            // No additional properties to set
+            Grade = "MG";
+        }
+
+        public MasterGradeKit(string modelName, string series, string scale)
+        {
+            ModelName = modelName;
+            Series = series;
+            Scale = scale;
+        }
+
+        // ctor used by program: (modelName, series, lineNumber)
+        public MasterGradeKit(string modelName, string series, int lineNumber)
+            : base(modelName, series, string.Empty)
+        {
+            Grade = "MG";
         }
 
         public override string GetDetails()
         {
-            // base.GetDetails() gets the Model, Series, Scale, and Built status
-            return $"{base.GetDetails()} MG Line";
+            return $"Model: {ModelName}, Series: {Series}, Scale: {Scale}, Built: {IsBuilt}, Grade: [MG]";
         }
     }
 }

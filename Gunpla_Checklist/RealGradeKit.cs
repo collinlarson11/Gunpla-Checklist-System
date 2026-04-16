@@ -3,29 +3,30 @@
 namespace Gunpla_Checklist
 {
     /// <summary>
-    /// Real Grade variant — includes a line number in addition to common kit properties.
-    /// Inherits from GunplaKit so it can be persisted alongside other kits.
+    /// Inherits from GunplaKit and represents a Real Grade kit. Adds LineNumber property.
+    /// Real Grade kit (RG). Sets Grade = "RG" automatically.
     /// </summary>
     internal class RealGradeKit : GunplaKit
     {
-        /// <summary>Manufacturing line or kit number (optional numeric identifier).</summary>
         public int LineNumber { get; set; }
 
-        /// <summary>Parameterless ctor required by serializer.</summary>
-        public RealGradeKit() : base() { }
-
-        /// <summary>Construct a Real Grade kit with line number.</summary>
-        public RealGradeKit(string modelName, string series, int lineNumber)
-            : base(modelName, series, "1/144")
+        // Parameterless ctor for serializer
+        public RealGradeKit()
         {
-            LineNumber = lineNumber;
+            Grade = "RG";
         }
 
-        /// <summary>Return details including the line number.</summary>
+        // ctor used by program: (modelName, series, lineNumber)
+        public RealGradeKit(string modelName, string series, int lineNumber, string scale)
+            : base(modelName, series, scale) 
+        {
+            LineNumber = lineNumber;
+            Grade = "RG";
+        }
+
         public override string GetDetails()
         {
-            // base.GetDetails() gets the Model, Series, Scale, and Built status
-            return $"{base.GetDetails()} RG Line #:{LineNumber}";
+            return $"Model: {ModelName}, Series: {Series}, Scale: {Scale}, Line#: {LineNumber}, Built: {IsBuilt}, Grade: [RG]";
         }
     }
 }
