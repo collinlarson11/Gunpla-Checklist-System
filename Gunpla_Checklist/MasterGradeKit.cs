@@ -15,23 +15,19 @@ namespace Gunpla_Checklist
             Grade = "MG";
         }
 
+        
+        /// <summary>
+        /// Primary ctor used by the app for Master Grade kits (no line number).
+        /// </summary>
         public MasterGradeKit(string modelName, string series, string scale)
-        {
-            ModelName = modelName;
-            Series = series;
-            Scale = scale;
-        }
-
-        // ctor used by program: (modelName, series, lineNumber)
-        public MasterGradeKit(string modelName, string series, int lineNumber)
-            : base(modelName, series, string.Empty)
+            : base(modelName, series, scale)
         {
             Grade = "MG";
         }
 
         public override string GetDetails()
         {
-            return $"Model: {ModelName}, Series: {Series}, Scale: {Scale}, Built: {IsBuilt}, Grade: [MG]";
+            return $"Model: {ModelName}, Series: {Series}, Scale: {Scale} Built: {IsBuilt}, Grade: [MG]";
         }
     }
 }
