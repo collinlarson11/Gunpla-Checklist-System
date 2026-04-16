@@ -65,7 +65,7 @@ namespace Gunpla_Checklist
             int unbuilt = total - built;
 
             // Group by series for a quick breakdown
-            var seriesBreakdown = MyKits
+            /*var seriesBreakdown = MyKits
                 .GroupBy(k => k.Series ?? string.Empty)
                 .OrderBy(g => g.Key)
                 .Select(g => $"{(string.IsNullOrEmpty(g.Key) ? "(Unknown)" : g.Key)}: {g.Count()}")
@@ -73,10 +73,18 @@ namespace Gunpla_Checklist
 
             string seriesPart = seriesBreakdown.Length > 0
                 ? $", By Series: {string.Join(", ", seriesBreakdown)}"
-                : string.Empty;
+                : string.Empty;*/
 
-            return $"Total: {total}, Built: {built}, Unbuilt: {unbuilt}{seriesPart}";
+            var gradeBreakdown = MyKits
+                .GroupBy(k => k.Grade ?? string.Empty)
+                .OrderBy(g => g.Key)
+                .Select(g => $"{(string.IsNullOrEmpty(g.Key) ? "(Unknown)" : g.Key)}: {g.Count()}")
+                .ToArray();
+
+            return $"Total: {total}, Built: {built}, Unbuilt: {unbuilt}, By Grade: {string.Join(", ", gradeBreakdown)}";
         }
+
+        /*{seriesPart}*/ // Uncomment if you want series breakdown in stats
 
         /// <summary>
         /// Marks the kit at the given 1-based index as built and persists the change.
