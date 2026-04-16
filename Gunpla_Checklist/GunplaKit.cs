@@ -41,6 +41,9 @@ namespace Gunpla_Checklist
 
         /// <summary>Return a human-readable details string for console display.</summary>
         public virtual string GetDetails()
-            => $"Model: {ModelName}, Series: {Series}, Scale: {Scale}, Built: {IsBuilt}";
+        {
+            // Returns the standard part of the string
+            return $"Model: {ModelName}, Series: {Series}, Scale: {Scale}, Built: {IsBuilt}";
+        }
     }
 }

@@ -14,10 +14,14 @@ namespace Gunpla_Checklist
         public MasterGradeKit(string modelName, string series)
             : base(modelName, series, "1/100")
         {
+            // No additional properties to set
         }
 
-        public override string GetDetails() =>
-            $"{base.GetDetails()} [Master Grade]";
+        public override string GetDetails()
+        {
+            // base.GetDetails() gets the Model, Series, Scale, and Built status
+            return $"{base.GetDetails()}, MG Line";
+        }
     }
 }
 

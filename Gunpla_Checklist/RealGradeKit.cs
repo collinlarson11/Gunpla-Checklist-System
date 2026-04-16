@@ -22,7 +22,10 @@ namespace Gunpla_Checklist
         }
 
         /// <summary>Return details including the line number.</summary>
-        public override string GetDetails() =>
-            $"{base.GetDetails()}, RG Line #: {LineNumber}";
+        public override string GetDetails()
+        {
+            // base.GetDetails() gets the Model, Series, Scale, and Built status
+            return $"{base.GetDetails()}, RG Line #: {LineNumber}";
+        }
     }
 }
