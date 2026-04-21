@@ -3,47 +3,55 @@ Management system for Gunpla Kits
 classDiagram
     direction TB
 
-    %% Relationships
-    CollectionManager "1" *-- "many" GunplaKit : manages
-    GunplaKit <|-- RealGradeKit : inheritance
-    GunplaKit <|-- MasterGradeKit : inheritance
-    Program ..> CollectionManager : uses
+   %% Relationships
+    GunplaKit <|-- RealGradeKit : Inheritance
+    GunplaKit <|-- MasterGradeKit : Inheritance
+    CollectionManager "1" *-- "many" GunplaKit : Composition (MyKits)
+    Program ..> CollectionManager : Dependency (Uses)
+    Program ..> GunplaKit : Dependency (Creates)
+
+    class Program {
+        +Main(args: string[]) void$
+        +ShowMenu() void$
+        -AddKitWorkflow(manager: CollectionManager) void$
+        -Pause() void$
+    }
+
+    class CollectionManager {
+        -List~GunplaKit~ MyKits
+        -string DataFilePath$
+        +CollectionManager()
+        +AddKit(kit: GunplaKit) void
+        +DisplayChecklist() void
+        +GetCollectionStats() string
+        +TryMarkKitBuilt(oneBasedIndex: int) bool
+        +TryDeleteKit(oneBasedIndex: int) bool
+        +DisplayUnbuiltKits() List~GunplaKit~
+        +Save() void
+        +Load() void
+    }
 
     class GunplaKit {
         +string ModelName
+        +bool IsBuilt
         +string Series
         +string Scale
-        +bool IsBuilt
+        +string Grade
+        +GunplaKit()
+        +GunplaKit(name: string, series: string, scale: string)
         +MarkAsBuilt() void
         +GetDetails() string*
     }
 
     class RealGradeKit {
         +int LineNumber
+        +RealGradeKit()
+        +RealGradeKit(name: string, series: string, line: int, scale: string)
         +GetDetails() string
     }
 
     class MasterGradeKit {
-        +int LineNumber
+        +MasterGradeKit()
+        +MasterGradeKit(name: string, series: string, scale: string)
         +GetDetails() string
-    }
-
-    class CollectionManager {
-        -List~GunplaKit~ MyKits
-        -string DataFilePath
-        +AddKit(GunplaKit kit) void
-        +TryMarkKitBuilt(int index) bool
-        +TryDeleteKit(int index) bool
-        +DisplayChecklist() void
-        +GetCollectionStats() string
-        +Save() void
-        +Load() void
-    }
-
-    class Program {
-        <<Main>>
-        +Main() void
-        +ShowMenu() void
-        -AddKitWorkflow() void
-        -Pause() void
     }
